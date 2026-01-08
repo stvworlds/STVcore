@@ -1,0 +1,9 @@
+name: STVcore
+version: '1.0'
+main: net.maksim6opka.STVcore.Main
+api-version: '1.21'
+prefix: STVcore
+load: STARTUP
+authors: [ Maksim6opka ]
+description: Stevious core functional plugin
+website: https://stv-docs.maksim6opka.net/
