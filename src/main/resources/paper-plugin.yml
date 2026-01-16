@@ -7,3 +7,8 @@ load: STARTUP
 authors: [ Maksim6opka ]
 description: Stevious core functional plugin
 website: https://stv-docs.maksim6opka.net/
+dependencies:
+  server:
+    LuckPerms:
+      load: BEFORE
+      required: false
