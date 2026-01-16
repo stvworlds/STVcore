@@ -52,11 +52,12 @@ public class SuffixCommand {
                                     .then(Commands.argument("player", ArgumentTypes.players()
 
                                                     )
-                                            .then(Commands.argument("suffix", StringArgumentType.word()))
+                                            .then(Commands.argument("suffix", StringArgumentType.greedyString()
+                                            )
                                             .executes(ctx -> {
                                                         final PlayerSelectorArgumentResolver targetResolver = ctx.getArgument("player", PlayerSelectorArgumentResolver.class);
                                                         final List<Player> targets = targetResolver.resolve(ctx.getSource());
-                                                        final String suffix = ctx.getArgument("suffix", String.class);
+                                                        String suffix = StringArgumentType.getString(ctx, "suffix");
                                                         final CommandSender sender = ctx.getSource().getSender();
 
                                                         for (final Player target : targets) {
@@ -79,7 +80,7 @@ public class SuffixCommand {
                                                         }
                                                         return 1;
                                                     }
-                                            )
+                                            ))
                                     )
                             )
                             .then(Commands.literal("remove")
