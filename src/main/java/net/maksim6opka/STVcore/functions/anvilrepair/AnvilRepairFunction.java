@@ -1,5 +1,6 @@
-package net.maksim6opka.STVcore.events;
+package net.maksim6opka.STVcore.functions.anvilrepair;
 
+import net.maksim6opka.STVcore.functions.PluginFunction;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -14,17 +15,27 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class AnvilMending implements Listener {
+public class AnvilRepairFunction implements PluginFunction, Listener {
 
+    private final JavaPlugin plugin;
     private final HashMap<UUID, Long> rateLimit = new HashMap<>();
 
-    @EventHandler
-    public void onAnvilMending(PlayerInteractEvent event) {
+    public AnvilRepairFunction(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
 
+    @Override
+    public void register() {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler
+    public void onAnvilRepair(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getHand() != EquipmentSlot.HAND) return;
 
@@ -38,7 +49,7 @@ public class AnvilMending implements Listener {
 
         Material type = block.getType();
         if (type != Material.CHIPPED_ANVIL &&
-            type != Material.DAMAGED_ANVIL) return;
+                type != Material.DAMAGED_ANVIL) return;
 
         if (player.isSneaking()) return;
 
@@ -64,7 +75,6 @@ public class AnvilMending implements Listener {
                 0.05
         );
 
-
         BlockData data = block.getBlockData();
         if (!(data instanceof Directional directional)) return;
         BlockFace face = directional.getFacing();
@@ -81,7 +91,7 @@ public class AnvilMending implements Listener {
         block.setType(newType);
 
         BlockData newData = block.getBlockData();
-        if (newData instanceof  Directional newDir) {
+        if (newData instanceof Directional newDir) {
             newDir.setFacing(face);
             block.setBlockData(newDir);
         }
