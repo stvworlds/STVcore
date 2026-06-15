@@ -7,6 +7,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
@@ -77,11 +78,21 @@ public class SuffixFunction implements PluginFunction {
                                                             applySuffix(suffix, user, api);
 
                                                             Component parsed = MiniMessage.miniMessage().deserialize(suffix);
-                                                            Messages.sendDM(Component.text("Успішно встановлено суфікс гравцю " + playerName + " | ").append(parsed), sender, "suffix", "info");
+                                                            Messages.sendDM(Component
+                                                                    .text("Успішно встановлено суфікс гравцю " + playerName + " | ")
+                                                                    .append(parsed)
+                                                                    .clickEvent(ClickEvent.suggestCommand(suffix))
+                                                                    .hoverEvent(HoverEvent.showText(Component.text("Натисніть, щоб скопіювати суфікс"))),
+                                                                    sender, "suffix", "info");
 
                                                             Player onlineTarget = Bukkit.getPlayer(uuid);
                                                             if (onlineTarget != null) {
-                                                                Messages.sendDM(Component.text("Ваш суфікс оновлено! | ").append(parsed), onlineTarget, "suffix", "info");
+                                                                Messages.sendDM(Component
+                                                                        .text("Ваш суфікс оновлено! | ")
+                                                                        .append(parsed)
+                                                                        .clickEvent(ClickEvent.suggestCommand(suffix))
+                                                                        .hoverEvent(HoverEvent.showText(Component.text("Натисніть, щоб скопіювати суфікс"))),
+                                                                        onlineTarget, "suffix", "info");
                                                             }
                                                         }).exceptionally(e -> {
                                                             Component errorText = Component.text("Виникла проблема під час виконання команди, натисніть, щоб скопіювати.")
@@ -167,7 +178,11 @@ public class SuffixFunction implements PluginFunction {
                                                     } else {
                                                         Component suffixComponent = MiniMessage.miniMessage().deserialize(suffix.trim());
                                                         Messages.sendDM(
-                                                                Component.text("Суфікс гравця " + playerName + ": ").append(suffixComponent),
+                                                                Component
+                                                                        .text("Суфікс гравця " + playerName + ": ")
+                                                                        .append(suffixComponent)
+                                                                        .clickEvent(ClickEvent.suggestCommand(suffix))
+                                                                        .hoverEvent(HoverEvent.showText(Component.text("Натисніть, щоб скопіювати суфікс"))),
                                                                 sender, "suffix", "info"
                                                         );
                                                     }
