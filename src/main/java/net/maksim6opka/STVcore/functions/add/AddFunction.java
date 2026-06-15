@@ -4,14 +4,12 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.kyori.adventure.text.Component;
 import net.maksim6opka.STVcore.functions.PluginFunction;
+import net.maksim6opka.STVcore.utils.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.ServerOperator;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Locale;
 
 public class AddFunction implements PluginFunction {
 
@@ -23,24 +21,22 @@ public class AddFunction implements PluginFunction {
 
     @Override
     public void register() {
-        FileConfiguration config = plugin.getConfig();
-
         plugin.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             final var registrar = event.registrar();
 
             registrar.register(
                     Commands.literal("add")
+                            .requires(req -> req.getSender().hasPermission("stv.admin"))
                             .executes(ctx -> {
                                 var sender = ctx.getSource().getSender();
-
-                                String msg = config.getString("messages.command.add.info", "Додає одного вказаного гравця до білого списку. Перезавантажується раз в 14 днів");
-                                sender.sendMessage("§a" + msg);
+                                String msg = plugin.getConfig().getString("messages.command.add.info", "Додає одного вказаного гравця до білого списку. Перезавантажується раз в 14 днів");
+                                Messages.sendDM(Component.text(msg), sender, "add", "info");
                                 return 1;
                             })
                             .then(Commands.argument("player", ArgumentTypes.player())
                                     .executes(ctx -> {
                                         var sender = ctx.getSource().getSender();
-                                        String msg = config.getString("messages.command.add.added", "Успішно додано");
+                                        String msg = plugin.getConfig().getString("messages.command.add.added", "Успішно додано");
                                         PlayerSelectorArgumentResolver targetResolver = ctx.getArgument("player", PlayerSelectorArgumentResolver.class);
                                         Player target = targetResolver.resolve(ctx.getSource()).getFirst();
 
@@ -49,7 +45,7 @@ public class AddFunction implements PluginFunction {
                                                 "twl add " + target.getName() + " permanent"
                                         );
 
-                                        sender.sendMessage(msg);
+                                        Messages.sendDM(Component.text(msg), sender, "add", "info");
                                         return 1;
                                     })
                             )
