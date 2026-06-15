@@ -12,6 +12,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.SuffixNode;
 import net.maksim6opka.STVcore.functions.PluginFunction;
+import net.maksim6opka.STVcore.utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -40,23 +41,25 @@ public class SuffixFunction implements PluginFunction {
 
             registrar.register(
                     Commands.literal("suffix")
-                            .requires(req -> req.getSender().hasPermission(config.getString("commands.suffix.permission", "stv.t-admin")))
+                            .requires(req -> req.getSender().hasPermission("stv.admin"))
                             .executes(ctx -> {
-                                String msg = config.getString("commands.suffix.messages.info", "Usage /suffix set/remove");
-                                ctx.getSource().getSender().sendMessage("§a" + msg);
+                                Component text = Component.text(config.getString("commands.suffix.messages.info", "Usage /suffix set/remove"));
+
+                                Messages.sendDM(text, ctx.getSource().getSender(),"suffix", "info");
+
                                 return 1;
                             })
                             .then(Commands.literal("set")
                                     .executes(ctx -> {
-                                                String msg = config.getString("commands.suffix.messages.info", "Usage /suffix set [player] [suffix]");
-                                                ctx.getSource().getSender().sendMessage("§a" + msg);
+                                                Component text = Component.text(config.getString("commands.suffix.messages.info.set", "Usage /suffix set [player] [suffix]"));
+                                                Messages.sendDM(text, ctx.getSource().getSender(),"suffix", "warn");
                                                 return 1;
                                             }
                                     )
                                     .then(Commands.argument("player", ArgumentTypes.players())
                                             .executes(ctx -> {
-                                                        String msg = config.getString("commands.suffix.messages.info", "Usage /suffix set [player] [suffix]");
-                                                        ctx.getSource().getSender().sendMessage("§a" + msg);
+                                                        Component text = Component.text(config.getString("commands.suffix.messages.info.set", "Usage /suffix set [player] [suffix]"));
+                                                        Messages.sendDM(text, ctx.getSource().getSender(),"suffix", "warn");
                                                         return 1;
                                                     }
                                             )
@@ -82,8 +85,11 @@ public class SuffixFunction implements PluginFunction {
                             )
                             .then(Commands.literal("remove")
                                     .executes(ctx -> {
-                                                String msg = config.getString("commands.suffix.messages.info", "Usage /suffix remove [player]");
-                                                ctx.getSource().getSender().sendMessage("§a" + msg);
+
+
+                                                Component text = Component.text(config.getString("commands.suffix.messages.info.remove", "Usage /suffix remove [player]"));
+                                                Messages.sendDM(text, ctx.getSource().getSender(),"suffix", "warn");
+
                                                 return 1;
                                             }
                                     )
@@ -96,34 +102,22 @@ public class SuffixFunction implements PluginFunction {
 
                                                 for (final Player target : targets) {
                                                     try {
-
                                                         OfflinePlayer player = Bukkit.getOfflinePlayer(target.getName());
-
                                                         setSuffix(suffix, player.getUniqueId());
-                                                        sender.sendMessage("Успішно видалено суфікс гравцю " + target.getName());
-                                                        target.sendMessage("Ваш суфікс видалено!");
+
+                                                        Messages.sendDM(Component.text("Успішно видалено суфікс гравцю " + target.getName()), sender,"suffix", "info");
+                                                        Messages.sendDM(Component.text("Ваш суфікс видалено!"), target,"suffix", "info");
+
                                                     } catch (Exception e) {
-                                                        sender.sendMessage(Component.text("§cВиникла проблема під час виконання команди, натисніть, щоб скопіювати.")
-                                                                .clickEvent(ClickEvent.suggestCommand("Помилка : " + e)));
+
+                                                        Component text = Component.text("Виникла проблема під час виконання команди, натисніть, щоб скопіювати.")
+                                                                .clickEvent(ClickEvent.suggestCommand("Помилка : " + e));
+                                                        Messages.sendDM(text, sender, "suffix", "error");
                                                         return 1;
                                                     }
                                                 }
                                                 return 1;
                                             })
-                                    )
-                            )
-                            .then(Commands.literal("test")
-                                    .then(Commands.argument("player", ArgumentTypes.player())
-                                            .executes(ctx -> {
-                                                        final PlayerSelectorArgumentResolver targetResolver = ctx.getArgument("player", PlayerSelectorArgumentResolver.class);
-                                                        final Player target = targetResolver.resolve(ctx.getSource()).getFirst();
-
-                                                        ctx.getSource().getSender().sendMessage(target.getName() + " " + target.getUniqueId());
-                                                        setSuffix("", target.getUniqueId());
-
-                                                        return 1;
-                                                    }
-                                            )
                                     )
                             )
                             .build()

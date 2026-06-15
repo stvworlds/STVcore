@@ -7,8 +7,8 @@ public interface MessageFunction {
     enum Info {
         CORE("core", "⛏", "Основні системні команди STVcore"),
         SUFFIX("suffix", "✦", "Керування суфіксами гравців"),
-        ADD("add", "+", "Додавання гравців до білого списку"),
-        ANVIL_REPAIR("anvilrepair", "⌂", "Ремонт ковадла за допомогою залізного блоку");
+        ADD("add", "+", "Додавання гравців до білого списку");
+
 
         private final String name;
         private final String symbol;
