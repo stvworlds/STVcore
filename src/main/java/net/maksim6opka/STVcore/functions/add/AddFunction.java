@@ -1,10 +1,12 @@
 package net.maksim6opka.STVcore.functions.add;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.Messages;
 import org.bukkit.Bukkit;
@@ -26,26 +28,30 @@ public class AddFunction implements PluginFunction {
 
             registrar.register(
                     Commands.literal("add")
-                            .requires(req -> req.getSender().hasPermission("stv.admin"))
                             .executes(ctx -> {
                                 var sender = ctx.getSource().getSender();
                                 String msg = plugin.getConfig().getString("messages.command.add.info", "Додає одного вказаного гравця до білого списку. Перезавантажується раз в 14 днів");
                                 Messages.sendDM(Component.text(msg), sender, "add", "info");
                                 return 1;
                             })
-                            .then(Commands.argument("player", ArgumentTypes.player())
+                            .then(Commands.argument("player", StringArgumentType.word())
                                     .executes(ctx -> {
                                         var sender = ctx.getSource().getSender();
-                                        String msg = plugin.getConfig().getString("messages.command.add.added", "Успішно додано");
-                                        PlayerSelectorArgumentResolver targetResolver = ctx.getArgument("player", PlayerSelectorArgumentResolver.class);
-                                        Player target = targetResolver.resolve(ctx.getSource()).getFirst();
+                                        String msg = plugin.getConfig().getString("messages.command.add.added", "Ви додали гравця ");
+
+                                        String username = ctx.getArgument("player", String.class);
 
                                         Bukkit.dispatchCommand(
                                                 Bukkit.getConsoleSender(),
-                                                "twl add " + target.getName() + " permanent"
+                                                "twl add " + username + " permanent"
                                         );
 
-                                        Messages.sendDM(Component.text(msg), sender, "add", "info");
+                                        Messages.sendDM(Component
+                                                .text(msg)
+                                                .append(Component.text(username))
+                                                        .color(TextColor.color(123)),
+                                                sender, "add", "info"
+                                        );
                                         return 1;
                                     })
                             )

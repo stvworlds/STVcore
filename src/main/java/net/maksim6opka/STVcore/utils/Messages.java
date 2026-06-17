@@ -19,7 +19,7 @@ public class Messages {
         MessageFunction.Info info = MessageFunction.Info.fromName(func);
 
         String symbol = info != null ? info.getSymbol() : "?";
-        String description = info != null ? info.getDescription() : "Невідома функція";
+        String description = info != null ? info.getDescription() : "Невідома команда";
 
         Component prefix = Component.empty()
                 .append(Component
