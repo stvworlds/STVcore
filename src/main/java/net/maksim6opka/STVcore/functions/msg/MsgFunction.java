@@ -178,8 +178,12 @@ public class MsgFunction implements PluginFunction {
                                     .color(arrowColor)
                             )
                             .append(Component
-                                    .text("ви: ")
+                                    .text("ви")
                                     .color(nameColor)
+                            )
+                            .append(Component
+                                    .text(": ")
+                                    .color(arrowColor)
                             )
                             .append(result
                                 .clickEvent(ClickEvent.suggestCommand(message))
@@ -194,9 +198,15 @@ public class MsgFunction implements PluginFunction {
                                     .text("ви")
                                     .color(nameColor)
                             )
-                            .append(Component.text(" ⏵ "))
+                            .append(Component
+                                    .text(" ⏵ ")
+                                    .color(arrowColor)
+                            )
                             .append(receiverInfo)
-                            .append(Component.text(": "))
+                            .append(Component
+                                    .text(": ")
+                                    .color(arrowColor)
+                            )
                             .append(result
                                 .clickEvent(ClickEvent.suggestCommand(message))
                                 .hoverEvent(copyMsg(msgColor))
@@ -250,7 +260,10 @@ public class MsgFunction implements PluginFunction {
                                             .color(selfColor)
                                             .hoverEvent(statusComponent)
                                     )
-                                    .append(Component.text(": "))
+                                    .append(Component
+                                            .text(": ")
+                                            .color(arrowColor)
+                                    )
                                     .append(finalResult
                                             .clickEvent(ClickEvent.suggestCommand(fixedMessage))
                                             .hoverEvent(copyMsg(msgColor))
