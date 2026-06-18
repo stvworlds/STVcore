@@ -4,6 +4,7 @@ import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.functions.add.AddFunction;
 import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
+import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,7 +24,8 @@ public final class Main extends JavaPlugin {
                 new CoreFunction(this),
                 new AnvilRepairFunction(this),
                 new SuffixFunction(this),
-                new AddFunction(this)
+                new AddFunction(this),
+                new MsgFunction(this)
         );
         functions.forEach(PluginFunction::register);
 

@@ -16,6 +16,7 @@ import net.luckperms.api.node.types.SuffixNode;
 import net.luckperms.api.query.QueryOptions;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.Messages;
+import net.maksim6opka.STVcore.utils.suggestions.AllPlayersSuggestions;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -52,7 +53,7 @@ public class SuffixFunction implements PluginFunction {
                                         Messages.sendDM(text, ctx.getSource().getSender(), "suffix", "warn");
                                         return 1;
                                     })
-                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(allPlayersSuggestions())
+                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(AllPlayersSuggestions.suggestion())
                                             .executes(ctx -> {
                                                 Component text = Component.text(plugin.getConfig().getString("commands.suffix.messages.info.set", "Usage /suffix set [player] [suffix]"));
                                                 Messages.sendDM(text, ctx.getSource().getSender(), "suffix", "warn");
@@ -112,7 +113,7 @@ public class SuffixFunction implements PluginFunction {
                                         Messages.sendDM(text, ctx.getSource().getSender(), "suffix", "warn");
                                         return 1;
                                     })
-                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(allPlayersSuggestions())
+                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(AllPlayersSuggestions.suggestion())
                                             .executes(ctx -> {
                                                 String playerName = StringArgumentType.getString(ctx, "player");
                                                 final CommandSender sender = ctx.getSource().getSender();
@@ -153,7 +154,7 @@ public class SuffixFunction implements PluginFunction {
                                         Messages.sendDM(text, ctx.getSource().getSender(), "suffix", "warn");
                                         return 1;
                                     })
-                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(allPlayersSuggestions())
+                                    .then(Commands.argument("player", StringArgumentType.word()).suggests(AllPlayersSuggestions.suggestion())
                                             .executes(ctx -> {
                                                 String playerName = StringArgumentType.getString(ctx, "player");
                                                 final CommandSender sender = ctx.getSource().getSender();
@@ -197,18 +198,7 @@ public class SuffixFunction implements PluginFunction {
         });
     }
 
-    private SuggestionProvider<CommandSourceStack> allPlayersSuggestions() {
-        return (ctx, builder) -> {
-            String input = builder.getRemaining().toLowerCase();
-            for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
-                String name = op.getName();
-                if (name != null && name.toLowerCase().startsWith(input)) {
-                    builder.suggest(name);
-                }
-            }
-            return builder.buildFuture();
-        };
-    }
+
 
     private LuckPerms getLuckPerms(CommandSender sender) {
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);

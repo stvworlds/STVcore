@@ -7,7 +7,8 @@ public interface MessageFunction {
     enum Info {
         CORE("core", "⛏", "Основні системні команди STVcore"),
         SUFFIX("suffix", "✦", "Керування суфіксами гравців"),
-        ADD("add", "+", "Додавання гравців до білого списку");
+        ADD("add", "+", "Додавання гравців до білого списку"),
+        MSG("msg", "✉", "Відправка приватного повідомлення гравцю");
 
 
         private final String name;
