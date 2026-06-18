@@ -7,7 +7,14 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import net.dv8tion.jda.api.components.container.Container;
+import net.dv8tion.jda.api.components.section.Section;
+import net.dv8tion.jda.api.components.separator.Separator;
+import net.dv8tion.jda.api.components.textdisplay.TextDisplay;
+import net.dv8tion.jda.api.components.thumbnail.Thumbnail;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -15,6 +22,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.Messages;
+import net.maksim6opka.STVcore.utils.PlayerAvatarUrl;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
 import net.maksim6opka.STVcore.utils.suggestions.AllPlayersSuggestions;
 import org.bukkit.Bukkit;
@@ -81,11 +89,47 @@ public class MsgFunction implements PluginFunction {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    private CompletableFuture<String> sendDiscordMsg(String message, User user) {
+    private CompletableFuture<String> sendDiscordMsg(String message, User user, CommandSender sender) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
+        String senderName;
+        String senderAvatarUrl;
+        if (sender instanceof Player) {
+            String senderDiscordID = DiscordSRV.getPlugin()
+                    .getAccountLinkManager()
+                    .getDiscordIdBypassCache(((Player) sender).getUniqueId());
+            if (senderDiscordID != null) {
+                senderName = "<@" + senderDiscordID + "> (*" + sender.getName() + "*)";
+            } else {
+                senderName ="**" + sender.getName() + "**";
+            }
+            senderAvatarUrl = PlayerAvatarUrl.getAvatarUrl((Player) sender);
+        } else {
+            senderName = "**Консоль**";
+            senderAvatarUrl = "https://visage.surgeplay.com/bust/512/f78a4d8dd51b4b3998a3230f2de0c670?y=-20";
+        }
+
+        Container container = Container.of(
+            Section.of(
+                    Thumbnail.fromUrl(senderAvatarUrl),
+                    TextDisplay.of(
+                            "### 💻 Ви отримали повідомлення!\n" +
+                                    "📨 Поки ви були не в мережі " +senderName + ",\n" +
+                                    "відправив(-ла) вам **приватне повідомлення**!"
+                    )
+            ),
+            Separator.createDivider(Separator.Spacing.SMALL),
+            TextDisplay.of("```\n" + message + "\n```")
+
+        );
+
+        MessageCreateData finalMessage = new MessageCreateBuilder()
+                .useComponentsV2()
+                .setComponents(container)
+                .build();
+
         user.openPrivateChannel()
-                .flatMap(channel -> channel.sendMessage("Привіт! " + message))
+                .flatMap(channel -> channel.sendMessage(finalMessage).useComponentsV2(true))
                 .queue(
                         success -> future.complete("success"),
                         error -> future.complete("error")
@@ -235,7 +279,7 @@ public class MsgFunction implements PluginFunction {
         DiscordLouder.getJDA()
                 .retrieveUserById(receiverDiscordId)
                 .submit()
-                .thenCompose(user -> sendDiscordMsg(message, user))
+                .thenCompose(user -> sendDiscordMsg(message, user, fixedSender))
                 .thenAccept(status -> {
 
                     Component statusComponent = switch (status) {
