@@ -15,3 +15,6 @@ dependencies:
     PlaceholderAPI:
       load: BEFORE
       required: true
+    DiscordSRV:
+      load: BEFORE
+      required: true

@@ -6,6 +6,7 @@ import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
+import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -13,11 +14,10 @@ import java.util.List;
 
 public final class Main extends JavaPlugin {
 
+    private DiscordLouder discordLouder;
 
     @Override
     public void onEnable() {
-
-
         saveDefaultConfig();
 
         List<PluginFunction> functions = List.of(
@@ -29,11 +29,22 @@ public final class Main extends JavaPlugin {
         );
         functions.forEach(PluginFunction::register);
 
+        discordLouder = new DiscordLouder(this);
+        discordLouder.connect();
+
         getLogger().info("Plugin enabled");
     }
 
     @Override
     public void onDisable() {
+        if (discordLouder != null) {
+            discordLouder.disconnect();
+        }
         getLogger().info("Plugin disabled");
     }
+
+    public DiscordLouder getDiscordLouder() {
+        return discordLouder;
+    }
 }
+
