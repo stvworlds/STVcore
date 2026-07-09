@@ -1,0 +1,19 @@
+syntax = "proto3";
+package net.maksim6opka.grpc;
+
+message PlayerSkinUrlRequest {
+
+  string uuid = 1;
+
+}
+
+message PlayerSkinUrlResponse {
+
+  string status = 1;
+  string url = 2;
+
+}
+
+service PlayerSkinUrlService {
+  rpc playerSkinUrl(PlayerSkinUrlRequest) returns (PlayerSkinUrlResponse);
+}

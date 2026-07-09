@@ -1,2 +1,4 @@
 discord:
   token: "TOKEN"
+server:
+  gRPC-port: 50051

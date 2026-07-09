@@ -6,9 +6,11 @@ import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
+import net.maksim6opka.STVcore.server.Builder;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -31,6 +33,13 @@ public final class Main extends JavaPlugin {
 
         discordLouder = new DiscordLouder(this);
         discordLouder.connect();
+
+        try {
+            Builder.build(this);
+        } catch (IOException | InterruptedException e) {
+            getLogger().warning("Failed to build gRPC server: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
 
         getLogger().info("Plugin enabled");
     }

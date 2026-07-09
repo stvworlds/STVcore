@@ -14,6 +14,10 @@ public class PlayerAvatarUrl {
 
     private static final Random RANDOM = new Random();
 
+    /*
+        Функції для отримання посилання на аватар гравця
+     */
+
     public static String getAvatarUrl(Player player) {
 
         String textureId = PlaceholderAPI.setPlaceholders(
@@ -22,12 +26,40 @@ public class PlayerAvatarUrl {
         );
 
         if (textureId.equalsIgnoreCase("Error")) {
-            String randomSkin = DEFAULT_SKINS.get(
-                    RANDOM.nextInt(DEFAULT_SKINS.size())
-            );
-            return "https://visage.surgeplay.com/bust/512/" + randomSkin + "?y=-20";
+            return getRandomAvatarUrl();
         }
 
         return "https://visage.surgeplay.com/bust/512/" + textureId + "?y=-20";
+    }
+
+    public static String getRandomAvatarUrl() {
+        String randomSkin = DEFAULT_SKINS.get(
+                RANDOM.nextInt(DEFAULT_SKINS.size())
+        );
+        return "https://visage.surgeplay.com/bust/512/" + randomSkin + "?y=-20";
+    }
+
+    /*
+        Функції для отримання посилання на скін гравця
+     */
+
+    public static String getSkinUrl(Player player) {
+        String textureId = PlaceholderAPI.setPlaceholders(
+                player,
+                "%skinsrestorer_texture_id%"
+        );
+
+        if (textureId.equalsIgnoreCase("Error")) {
+            return getRandomSkinUrl();
+        }
+
+        return "https://visage.surgeplay.com/skin" + textureId;
+    }
+
+    public static String getRandomSkinUrl() {
+        String randomSkin = DEFAULT_SKINS.get(
+                RANDOM.nextInt(DEFAULT_SKINS.size())
+        );
+        return "https://visage.surgeplay.com/skin/" + randomSkin;
     }
 }
