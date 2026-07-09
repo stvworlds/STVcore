@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.TimeUnit;
+
 public class DiscordLouder extends ListenerAdapter {
 
     private static JDA jda;
@@ -34,9 +36,25 @@ public class DiscordLouder extends ListenerAdapter {
     }
 
     public void disconnect() {
-        if (jda != null) {
-            jda.shutdown();
-            jda = null;
+        JDA currentJda = jda;
+        if (currentJda == null) {
+            return;
+        }
+
+        jda = null;
+        currentJda.removeEventListener(this);
+        currentJda.shutdown();
+
+        try {
+            if (!currentJda.awaitShutdown(10, TimeUnit.SECONDS)) {
+                plugin.getLogger().warning("JDA did not shut down in time; forcing shutdown");
+                currentJda.shutdownNow();
+                currentJda.awaitShutdown(5, TimeUnit.SECONDS);
+            }
+        } catch (InterruptedException e) {
+            currentJda.shutdownNow();
+            Thread.currentThread().interrupt();
+            plugin.getLogger().warning("Interrupted while shutting down JDA");
         }
     }
 
