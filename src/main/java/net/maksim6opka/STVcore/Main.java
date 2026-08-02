@@ -1,5 +1,6 @@
 package net.maksim6opka.STVcore;
 
+import io.grpc.Server;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.functions.add.AddFunction;
 import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
@@ -17,6 +18,7 @@ import java.util.List;
 public final class Main extends JavaPlugin {
 
     private DiscordLouder discordLouder;
+    private Server grpcServer;
 
     @Override
     public void onEnable() {
@@ -35,8 +37,8 @@ public final class Main extends JavaPlugin {
         discordLouder.connect();
 
         try {
-            Builder.build(this);
-        } catch (IOException | InterruptedException e) {
+            grpcServer = Builder.build(this);
+        } catch (IOException e) {
             getLogger().warning("Failed to build gRPC server: " + e.getMessage());
             throw new RuntimeException(e);
         }
@@ -46,6 +48,10 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (grpcServer != null) {
+            grpcServer.shutdownNow();
+            grpcServer = null;
+        }
         if (discordLouder != null) {
             discordLouder.disconnect();
         }
@@ -56,4 +62,3 @@ public final class Main extends JavaPlugin {
         return discordLouder;
     }
 }
-

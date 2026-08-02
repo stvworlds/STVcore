@@ -7,6 +7,8 @@ import net.maksim6opka.grpc.PlayerSkinUrlServiceGrpc;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class PlayerSkinUrlServiceImpl extends PlayerSkinUrlServiceGrpc.PlayerSkinUrlServiceImplBase {
 
     @Override
@@ -14,12 +16,17 @@ public class PlayerSkinUrlServiceImpl extends PlayerSkinUrlServiceGrpc.PlayerSki
         String status;
         String url = PlayerAvatarUrl.getRandomSkinUrl();
 
-        Player player = Bukkit.getOfflinePlayer(request.getUuid()).getPlayer();
-        if(player == null) {
-            status = "Error";
-        } else {
+        try {
+            UUID uuid = UUID.fromString(request.getUuid());
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                url = PlayerAvatarUrl.getSkinUrl(player);
+            } else {
+                url = PlayerAvatarUrl.getSkinUrl(uuid);
+            }
             status = "Ok";
-            url = PlayerAvatarUrl.getSkinUrl(player);
+        } catch (IllegalArgumentException e) {
+            status = "Error";
         }
 
 

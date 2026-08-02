@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 
 public class Builder {
-    public static void build(JavaPlugin plugin) throws IOException, InterruptedException {
+    public static Server build(JavaPlugin plugin) throws IOException {
         int port = plugin.getConfig().getInt("server.gRPC-port");
 
         Server server = ServerBuilder.forPort(port)
@@ -17,7 +17,6 @@ public class Builder {
 
         server.start();
         plugin.getLogger().info("gRPC server started on port " + port);
-
-        server.awaitTermination();
+        return server;
     }
 }
