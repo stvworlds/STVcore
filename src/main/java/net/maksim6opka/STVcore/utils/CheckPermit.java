@@ -16,7 +16,7 @@ public final class CheckPermit {
 
     private static final URI HAS_PERMIT_ENDPOINT = URI.create("https://api.stvworlds.win/user/hasPermit");
     private static final HttpClient CLIENT = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(5))
+            .connectTimeout(Duration.ofSeconds(3))
             .build();
 
     private CheckPermit() {
@@ -35,7 +35,7 @@ public final class CheckPermit {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(HAS_PERMIT_ENDPOINT + "?searchType=UUID_MC&value=" + encodedUuid))
                 .header("X-API-KEY", apiKey)
-                .timeout(Duration.ofSeconds(10))
+                .timeout(Duration.ofSeconds(3))
                 .GET()
                 .build();
 
