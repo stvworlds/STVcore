@@ -7,7 +7,9 @@ import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
+import net.maksim6opka.STVcore.functions.whitelist.WhiteListFunction;
 import net.maksim6opka.STVcore.server.Builder;
+import net.maksim6opka.STVcore.utils.Config;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,12 +25,15 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        Config.init(this);
+
 
         List<PluginFunction> functions = List.of(
                 new CoreFunction(this),
                 new AnvilRepairFunction(this),
                 new SuffixFunction(this),
                 new AddFunction(this),
+                new WhiteListFunction(this),
                 new MsgFunction(this)
         );
         functions.forEach(PluginFunction::register);
