@@ -6,3 +6,9 @@ api:
   key: "API_KEY"
 whitelist:
   enabled: false
+commandlog:
+  webhook:
+    url: "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN"
+  avatars:
+    commandBlock: "https://vzge.me/bust/512/CommandBlock?y=-20"
+    console: "https://vzge.me/bust/512/CONSOLE?y=-20"
