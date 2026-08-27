@@ -6,6 +6,7 @@ import net.maksim6opka.STVcore.functions.add.AddFunction;
 import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.commandLog.CommandLog;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
+import net.maksim6opka.STVcore.functions.lobby.LobbyFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
 import net.maksim6opka.STVcore.functions.whitelist.WhiteListFunction;
@@ -36,7 +37,8 @@ public final class Main extends JavaPlugin {
                 new AddFunction(this),
                 new WhiteListFunction(this),
                 new MsgFunction(this),
-                new CommandLog(this)
+                new CommandLog(this),
+                new LobbyFunction(this)
         );
         functions.forEach(PluginFunction::register);
 
