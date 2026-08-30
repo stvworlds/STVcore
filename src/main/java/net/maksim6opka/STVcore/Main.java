@@ -2,7 +2,6 @@ package net.maksim6opka.STVcore;
 
 import io.grpc.Server;
 import net.maksim6opka.STVcore.functions.PluginFunction;
-import net.maksim6opka.STVcore.functions.add.AddFunction;
 import net.maksim6opka.STVcore.functions.anvilrepair.AnvilRepairFunction;
 import net.maksim6opka.STVcore.functions.commandLog.CommandLog;
 import net.maksim6opka.STVcore.functions.core.CoreFunction;
@@ -34,7 +33,6 @@ public final class Main extends JavaPlugin {
                 new CoreFunction(this),
                 new AnvilRepairFunction(this),
                 new SuffixFunction(this),
-                new AddFunction(this),
                 new WhiteListFunction(this),
                 new MsgFunction(this),
                 new CommandLog(this),

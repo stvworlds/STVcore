@@ -2,17 +2,15 @@ package net.maksim6opka.STVcore.functions.add;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.papermc.paper.command.brigadier.Commands;
-import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
-import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Deprecated(since = "30.08.2026")
 public class AddFunction implements PluginFunction {
 
     private final JavaPlugin plugin;
