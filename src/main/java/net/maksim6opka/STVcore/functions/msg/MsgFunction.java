@@ -1,7 +1,6 @@
 package net.maksim6opka.STVcore.functions.msg;
 
 import com.mojang.brigadier.context.CommandContext;
-import github.scarsz.discordsrv.DiscordSRV;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.clip.placeholderapi.PlaceholderAPI;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -21,6 +20,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.PluginFunction;
+import net.maksim6opka.STVcore.utils.FindUser;
 import net.maksim6opka.STVcore.utils.Messages;
 import net.maksim6opka.STVcore.utils.PlayerAvatarUrl;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class MsgFunction implements PluginFunction {
@@ -89,19 +90,16 @@ public class MsgFunction implements PluginFunction {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    private CompletableFuture<String> sendDiscordMsg(String message, User user, CommandSender sender) {
+    private CompletableFuture<String> sendDiscordMsg(String message, User user, CommandSender sender, String senderDiscordId) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         String senderName;
         String senderAvatarUrl;
         if (sender instanceof Player) {
-            String senderDiscordID = DiscordSRV.getPlugin()
-                    .getAccountLinkManager()
-                    .getDiscordIdBypassCache(((Player) sender).getUniqueId());
-            if (senderDiscordID != null) {
-                senderName = "<@" + senderDiscordID + "> (*" + sender.getName() + "*)";
+            if (senderDiscordId != null && !senderDiscordId.isBlank()) {
+                senderName = "<@" + senderDiscordId + "> (*" + sender.getName() + "*)";
             } else {
-                senderName ="**" + sender.getName() + "**";
+                senderName = "**" + sender.getName() + "**";
             }
             senderAvatarUrl = PlayerAvatarUrl.getAvatarUrl((Player) sender);
         } else {
@@ -261,26 +259,35 @@ public class MsgFunction implements PluginFunction {
             return 1;
         }
 
-        String receiverDiscordId = DiscordSRV.getPlugin()
-                .getAccountLinkManager()
-                .getDiscordIdBypassCache(offlineReceiver.getUniqueId());
-
-        if (receiverDiscordId == null) {
-            Messages.sendDM(
-                    Component.text("Гравець офлайн і не прив'язаний до Discord."),
-                    fixedSender, "msg", "error"
-            );
-            return 0;
-        }
-
         final Component finalResult = result;
         final String fixedMessage = message;
         final Component fixedPlayerInfo = playerInfo(offlineReceiver, nameColor);
-        DiscordLouder.getJDA()
-                .retrieveUserById(receiverDiscordId)
-                .submit()
-                .thenCompose(user -> sendDiscordMsg(message, user, fixedSender))
+        final UUID receiverUuid = offlineReceiver.getUniqueId();
+        final UUID senderUuid = sender instanceof Player player ? player.getUniqueId() : null;
+
+        CompletableFuture<String> receiverDiscordFuture = FindUser.getDiscordIdAsync(receiverUuid);
+        CompletableFuture<String> senderDiscordFuture = senderUuid != null
+                ? FindUser.getDiscordIdAsync(senderUuid)
+                : CompletableFuture.completedFuture(null);
+
+        receiverDiscordFuture.thenCombine(senderDiscordFuture, (receiverDiscordId, senderDiscordId) -> {
+            if (receiverDiscordId == null) {
+                Bukkit.getScheduler().runTask(plugin, () -> Messages.sendDM(
+                        Component.text("Гравець офлайн і не прив'язаний до Discord."),
+                        fixedSender, "msg", "error"
+                ));
+                return null;
+            }
+
+            return DiscordLouder.getJDA()
+                    .retrieveUserById(receiverDiscordId)
+                    .submit()
+                    .thenCompose(user -> sendDiscordMsg(fixedMessage, user, fixedSender, senderDiscordId));
+        }).thenCompose(inner -> inner != null ? inner : CompletableFuture.completedFuture(null))
                 .thenAccept(status -> {
+                    if (status == null) {
+                        return;
+                    }
 
                     Component statusComponent = switch (status) {
                         case "success" -> Component.text("Повідомлення надіслано в Discord");
