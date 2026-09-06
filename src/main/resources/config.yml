@@ -12,3 +12,5 @@ commandlog:
   avatars:
     commandBlock: "https://vzge.me/bust/512/CommandBlock?y=-20"
     console: "https://vzge.me/bust/512/CONSOLE?y=-20"
+placeholders:
+  prefetch: true

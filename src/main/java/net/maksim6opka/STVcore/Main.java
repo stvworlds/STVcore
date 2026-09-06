@@ -9,9 +9,12 @@ import net.maksim6opka.STVcore.functions.lobby.LobbyFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
 import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
 import net.maksim6opka.STVcore.functions.whitelist.WhiteListFunction;
+import net.maksim6opka.STVcore.placeholders.StvExpansion;
+import net.maksim6opka.STVcore.placeholders.providers.UserDiscordUsernamePlaceholder;
 import net.maksim6opka.STVcore.server.Builder;
 import net.maksim6opka.STVcore.utils.Config;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -39,6 +42,15 @@ public final class Main extends JavaPlugin {
                 new LobbyFunction(this)
         );
         functions.forEach(PluginFunction::register);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            StvExpansion expansion = new StvExpansion(this, List.of(
+                    new UserDiscordUsernamePlaceholder()
+            ));
+            boolean registered = expansion.register();
+            getLogger().info("PlaceholderAPI expansion registered: " + registered);
+            getServer().getPluginManager().registerEvents(expansion, this);
+        }
 
         discordLouder = new DiscordLouder(this);
         discordLouder.connect();
