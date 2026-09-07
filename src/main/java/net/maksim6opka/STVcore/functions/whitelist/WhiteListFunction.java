@@ -3,11 +3,13 @@ package net.maksim6opka.STVcore.functions.whitelist;
 import net.kyori.adventure.text.Component;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.CheckPermit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
+import java.util.UUID;
 
 public class WhiteListFunction implements PluginFunction, Listener {
 
@@ -23,14 +25,15 @@ public class WhiteListFunction implements PluginFunction, Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
         if (!plugin.getConfig().getBoolean("whitelist.enabled", false)){
             return;
         }
-        Player player = event.getPlayer();
+        UUID player = Objects.requireNonNull(event.getPlayerProfile().getId());
 
         if (!CheckPermit.checkPermit(player)) {
-            player.kick(Component.text("Ви не гравець! \n\nСтаньте гравцем на https://stvworlds.win,\nабо якщо вважаєте це за помилку зверніться до адміністрації."));
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST,
+                    Component.text("Ви не гравець! \n\nСтаньте гравцем на https://stvworlds.win,\nабо якщо вважаєте це за помилку зверніться до адміністрації."));
         }
     }
 

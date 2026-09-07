@@ -23,7 +23,10 @@ public final class CheckPermit {
     }
 
     public static boolean checkPermit(Player player) {
-        UUID uuid = player.getUniqueId();
+        return checkPermit(player.getUniqueId());
+    }
+
+    public static boolean checkPermit(UUID uuid) {
         String encodedUuid = URLEncoder.encode(uuid.toString(), StandardCharsets.UTF_8);
         String apiKey = Config.getString("api.key");
 
