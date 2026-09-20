@@ -11,6 +11,7 @@ import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
 import net.maksim6opka.STVcore.functions.whitelist.WhiteListFunction;
 import net.maksim6opka.STVcore.placeholders.StvExpansion;
 import net.maksim6opka.STVcore.placeholders.providers.UserDiscordUsernamePlaceholder;
+import net.maksim6opka.STVcore.placeholders.providers.UserWorldIconPlaceholder;
 import net.maksim6opka.STVcore.server.Builder;
 import net.maksim6opka.STVcore.utils.Config;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
@@ -45,7 +46,8 @@ public final class Main extends JavaPlugin {
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             StvExpansion expansion = new StvExpansion(this, List.of(
-                    new UserDiscordUsernamePlaceholder()
+                    new UserDiscordUsernamePlaceholder(),
+                    new UserWorldIconPlaceholder()
             ));
             boolean registered = expansion.register();
             getLogger().info("PlaceholderAPI expansion registered: " + registered);
@@ -55,11 +57,13 @@ public final class Main extends JavaPlugin {
         discordLouder = new DiscordLouder(this);
         discordLouder.connect();
 
-        try {
-            grpcServer = Builder.build(this);
-        } catch (IOException e) {
-            getLogger().warning("Failed to build gRPC server: " + e.getMessage());
-            throw new RuntimeException(e);
+        if (Config.getBoolean("server.enabled", false)) {
+            try {
+                grpcServer = Builder.build(this);
+            } catch (IOException e) {
+                getLogger().warning("Failed to build gRPC server: " + e.getMessage());
+                throw new RuntimeException(e);
+            }
         }
 
         getLogger().info("Plugin enabled");

@@ -1,6 +1,7 @@
 discord:
   token: "TOKEN"
 server:
+  enabled: false
   gRPC-port: 50051
 api:
   key: "API_KEY"
