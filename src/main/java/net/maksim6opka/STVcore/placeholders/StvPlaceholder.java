@@ -1,6 +1,6 @@
 package net.maksim6opka.STVcore.placeholders;
 
-import net.maksim6opka.STVcore.utils.FindUser;
+import net.maksim6opka.STVcore.utils.backend.FindUser;
 import org.bukkit.entity.Player;
 
 public interface StvPlaceholder {

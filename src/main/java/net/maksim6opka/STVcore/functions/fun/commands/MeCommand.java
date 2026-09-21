@@ -7,7 +7,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.maksim6opka.STVcore.functions.fun.FunCommand;
-import net.maksim6opka.STVcore.utils.Messages;
+import net.maksim6opka.STVcore.utils.formatting.message.Messages;
 
 public class MeCommand implements FunCommand {
     @Override

@@ -1,7 +1,7 @@
 package net.maksim6opka.STVcore.placeholders.providers;
 
 import net.maksim6opka.STVcore.placeholders.StvPlaceholder;
-import net.maksim6opka.STVcore.utils.FindUser;
+import net.maksim6opka.STVcore.utils.backend.FindUser;
 import org.bukkit.entity.Player;
 
 public class UserDiscordUsernamePlaceholder implements StvPlaceholder {

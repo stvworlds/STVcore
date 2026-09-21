@@ -1,7 +1,7 @@
 name: STVcore
-version: '1.0'
+version: '2.0'
 main: net.maksim6opka.STVcore.Main
-api-version: '1.21'
+api-version: '26.2'
 prefix: STVcore
 authors: [ Maksim6opka ]
 description: Stevious core functional plugin
@@ -12,9 +12,6 @@ dependencies:
       load: BEFORE
       required: true
     PlaceholderAPI:
-      load: BEFORE
-      required: true
-    DiscordSRV:
       load: BEFORE
       required: true
     SkinsRestorer:

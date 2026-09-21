@@ -1,8 +1,6 @@
 package net.maksim6opka.STVcore.functions.suffix;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
@@ -15,10 +13,9 @@ import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.SuffixNode;
 import net.luckperms.api.query.QueryOptions;
 import net.maksim6opka.STVcore.functions.PluginFunction;
-import net.maksim6opka.STVcore.utils.Messages;
+import net.maksim6opka.STVcore.utils.formatting.message.Messages;
 import net.maksim6opka.STVcore.utils.suggestions.AllPlayersSuggestions;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;

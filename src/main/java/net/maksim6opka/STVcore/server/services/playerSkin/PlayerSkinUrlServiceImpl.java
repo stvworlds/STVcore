@@ -1,7 +1,7 @@
 package net.maksim6opka.STVcore.server.services.playerSkin;
 
 import io.grpc.stub.StreamObserver;
-import net.maksim6opka.STVcore.utils.PlayerAvatarUrl;
+import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerAvatarUrl;
 import net.maksim6opka.grpc.PlayerService;
 import net.maksim6opka.grpc.PlayerSkinUrlServiceGrpc;
 import org.bukkit.Bukkit;

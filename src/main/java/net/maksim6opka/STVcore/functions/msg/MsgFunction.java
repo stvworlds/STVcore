@@ -2,7 +2,6 @@ package net.maksim6opka.STVcore.functions.msg;
 
 import com.mojang.brigadier.context.CommandContext;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import me.clip.placeholderapi.PlaceholderAPI;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
@@ -16,13 +15,13 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.PluginFunction;
-import net.maksim6opka.STVcore.utils.FindUser;
-import net.maksim6opka.STVcore.utils.Messages;
-import net.maksim6opka.STVcore.utils.PlayerAvatarUrl;
+import net.maksim6opka.STVcore.utils.backend.FindUser;
+import net.maksim6opka.STVcore.utils.formatting.message.Messages;
+import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerAvatarUrl;
+import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerInfo;
 import net.maksim6opka.STVcore.utils.louders.DiscordLouder;
 import net.maksim6opka.STVcore.utils.suggestions.AllPlayersSuggestions;
 import org.bukkit.Bukkit;
@@ -43,55 +42,7 @@ public class MsgFunction implements PluginFunction {
         this.plugin = plugin;
     }
 
-    private static Component playerInfo(OfflinePlayer player, TextColor color) {
-        if (player == null) {
-            return Component.text("невідомо").color(color);
-        }
 
-        String name = player.getName();
-        if (name == null) {
-            name = "невідомо";
-        }
-
-        Component text = Component.empty()
-                .append(Component.text("✎ ").color(color))
-                .append(Component.text("Натисни, ").color(TextColor.fromHexString("#AAAAAA")))
-                .append(Component.text("щоб надіслати повідомлення.").color(color))
-                .append(Component.newline())
-                .append(Component.newline())
-                .append(Component.text("☠ ⏸ " + PlaceholderAPI.setPlaceholders(player, "%statistic_DEATHS%"))
-                        .color(TextColor.fromHexString("#AAAAAA")))
-                .append(Component.newline())
-                .append(Component.text("⌚ ⏸ " + PlaceholderAPI.setPlaceholders(player, "%statistic_hours_played%") + "г.")
-                        .color(TextColor.fromHexString("#AAAAAA")))
-                .append(Component.newline())
-                .append(Component.text("ds ⏸ @" + PlaceholderAPI.setPlaceholders(player, "%stv_user_discord_username%"))
-                        .color(TextColor.fromHexString("#AAAAAA")));
-
-        return Component.text(name).color(color)
-                .clickEvent(ClickEvent.suggestCommand(name))
-                .hoverEvent(HoverEvent.showText(text));
-    }
-
-    private static Component copyMsg(TextColor color) {
-        return Component.empty()
-                .append(Component
-                                .text("✎ ")
-                                .color(color)
-                )
-                .append(Component
-                        .text("Натисни, ")
-                        .color(TextColor.fromHexString("#AAAAAA"))
-                )
-                .append(Component
-                        .text("щоб скопіювати.")
-                        .color(color)
-                );
-    }
-
-    private static Component parseMsg(String message) {
-        return MiniMessage.miniMessage().deserialize(message);
-    }
 
     private CompletableFuture<String> sendDiscordMsg(String message, User user, CommandSender sender, String senderDiscordId) {
         CompletableFuture<String> future = new CompletableFuture<>();
@@ -195,7 +146,7 @@ public class MsgFunction implements PluginFunction {
         }
 
         Component result = sender.hasPermission("stv.sponsor")
-                ? parseMsg(message)
+                ? PlayerInfo.parseMsg(message)
                 : Component.text(message);
 
         if (offlineReceiver.isOnline()) {
@@ -207,12 +158,12 @@ public class MsgFunction implements PluginFunction {
 
             Component senderInfo;
             if (sender instanceof Player player) {
-                senderInfo = playerInfo(player, nameColor);
+                senderInfo = PlayerInfo.playerInfo(player, nameColor);
             } else {
                 senderInfo = Component.text("консоль").color(nameColor);
             }
 
-            Component receiverInfo = playerInfo(offlineReceiver, nameColor);
+            Component receiverInfo = PlayerInfo.playerInfo(offlineReceiver, nameColor);
 
 
             Messages.sendDM(
@@ -232,7 +183,7 @@ public class MsgFunction implements PluginFunction {
                             )
                             .append(result
                                 .clickEvent(ClickEvent.suggestCommand(message))
-                                .hoverEvent(copyMsg(msgColor))
+                                .hoverEvent(PlayerInfo.copyMsg(msgColor))
                             ),
                     receiver, "msg", "info"
             );
@@ -254,7 +205,7 @@ public class MsgFunction implements PluginFunction {
                             )
                             .append(result
                                 .clickEvent(ClickEvent.suggestCommand(message))
-                                .hoverEvent(copyMsg(msgColor))
+                                .hoverEvent(PlayerInfo.copyMsg(msgColor))
                             ),
                     sender, "msg", "info"
             );
@@ -264,7 +215,7 @@ public class MsgFunction implements PluginFunction {
 
         final Component finalResult = result;
         final String fixedMessage = message;
-        final Component fixedPlayerInfo = playerInfo(offlineReceiver, nameColor);
+        final Component fixedPlayerInfo = PlayerInfo.playerInfo(offlineReceiver, nameColor);
         final UUID receiverUuid = offlineReceiver.getUniqueId();
         final UUID senderUuid = sender instanceof Player player ? player.getUniqueId() : null;
 
@@ -320,7 +271,7 @@ public class MsgFunction implements PluginFunction {
                                     )
                                     .append(finalResult
                                             .clickEvent(ClickEvent.suggestCommand(fixedMessage))
-                                            .hoverEvent(copyMsg(msgColor))
+                                            .hoverEvent(PlayerInfo.copyMsg(msgColor))
                                     ),
                             fixedSender, "msg", "info"
                     ));

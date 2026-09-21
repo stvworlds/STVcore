@@ -2,7 +2,7 @@ package net.maksim6opka.STVcore.functions.whitelist;
 
 import net.kyori.adventure.text.Component;
 import net.maksim6opka.STVcore.functions.PluginFunction;
-import net.maksim6opka.STVcore.utils.CheckPermit;
+import net.maksim6opka.STVcore.utils.backend.CheckPermit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;

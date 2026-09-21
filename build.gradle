@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'net.maksim6opka'
-version = '1.0-SNAPSHOT'
+version = pluginVersion
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
 
     compileOnly "me.clip:placeholderapi:2.11.6"
     compileOnly 'net.luckperms:api:5.4'
@@ -62,14 +62,15 @@ tasks {
         archiveClassifier.set("")
     }
     runServer {
-        minecraftVersion("1.21.11")
+        jvmArgs '-Dfile.encoding=UTF-8'
+        minecraftVersion("26.2")
     }
     build {
         dependsOn shadowJar
     }
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

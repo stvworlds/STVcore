@@ -3,7 +3,7 @@ package net.maksim6opka.STVcore.functions.commandLog;
 import net.maksim6opka.STVcore.functions.PluginFunction;
 import net.maksim6opka.STVcore.utils.Config;
 import net.maksim6opka.STVcore.utils.DiscordWebhook;
-import net.maksim6opka.STVcore.utils.PlayerAvatarUrl;
+import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerAvatarUrl;
 import org.bukkit.Bukkit;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;

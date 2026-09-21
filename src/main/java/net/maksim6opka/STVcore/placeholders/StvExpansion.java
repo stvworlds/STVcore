@@ -3,7 +3,7 @@ package net.maksim6opka.STVcore.placeholders;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.maksim6opka.STVcore.Main;
 import net.maksim6opka.STVcore.utils.Config;
-import net.maksim6opka.STVcore.utils.FindUser;
+import net.maksim6opka.STVcore.utils.backend.FindUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

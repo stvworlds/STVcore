@@ -1,4 +1,4 @@
-package net.maksim6opka.STVcore.utils;
+package net.maksim6opka.STVcore.utils.formatting.playerInfo;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.skinsrestorer.api.SkinsRestorerProvider;

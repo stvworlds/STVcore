@@ -1,5 +1,6 @@
-package net.maksim6opka.STVcore.utils;
+package net.maksim6opka.STVcore.utils.backend;
 
+import net.maksim6opka.STVcore.utils.Config;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

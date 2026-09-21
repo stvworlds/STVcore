@@ -6,7 +6,7 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.maksim6opka.STVcore.functions.PluginFunction;
-import net.maksim6opka.STVcore.utils.Messages;
+import net.maksim6opka.STVcore.utils.formatting.message.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

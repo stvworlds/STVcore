@@ -1,4 +1,4 @@
-package net.maksim6opka.STVcore.utils;
+package net.maksim6opka.STVcore.utils.formatting.message;
 
 import java.util.Arrays;
 
