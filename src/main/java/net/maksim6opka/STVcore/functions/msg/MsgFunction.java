@@ -18,6 +18,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.PluginFunction;
+import net.maksim6opka.STVcore.utils.RateLimiter;
 import net.maksim6opka.STVcore.utils.backend.FindUser;
 import net.maksim6opka.STVcore.utils.formatting.message.Messages;
 import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerAvatarUrl;
@@ -30,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -158,6 +160,10 @@ public class MsgFunction implements PluginFunction {
 
             Component senderInfo;
             if (sender instanceof Player player) {
+                if (!RateLimiter.tryAcquire(player.getUniqueId(), 5, Duration.ofSeconds(10))) {
+                    Messages.sendDM(mm.deserialize("<red>Ліміт перевищено. Зачекайте пару секунд..."), ctx.getSource().getSender(), "msg", "warn");
+                    return 1;
+                }
                 senderInfo = PlayerInfo.playerInfo(player, nameColor);
             } else {
                 senderInfo = Component.text("консоль").color(nameColor);

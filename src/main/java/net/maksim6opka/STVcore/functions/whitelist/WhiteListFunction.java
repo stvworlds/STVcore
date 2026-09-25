@@ -2,6 +2,7 @@ package net.maksim6opka.STVcore.functions.whitelist;
 
 import net.kyori.adventure.text.Component;
 import net.maksim6opka.STVcore.functions.PluginFunction;
+import net.maksim6opka.STVcore.utils.Config;
 import net.maksim6opka.STVcore.utils.backend.CheckPermit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class WhiteListFunction implements PluginFunction, Listener {
 
     @EventHandler
     public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
-        if (!plugin.getConfig().getBoolean("whitelist.enabled", false)){
+        if (!Config.getBoolean("whitelist.enabled", false)){
             return;
         }
         UUID player = Objects.requireNonNull(event.getPlayerProfile().getId());

@@ -8,7 +8,6 @@ import net.maksim6opka.STVcore.functions.core.CoreFunction;
 import net.maksim6opka.STVcore.functions.fun.FunCommandsRegistry;
 import net.maksim6opka.STVcore.functions.lobby.LobbyFunction;
 import net.maksim6opka.STVcore.functions.msg.MsgFunction;
-import net.maksim6opka.STVcore.functions.suffix.SuffixFunction;
 import net.maksim6opka.STVcore.functions.whitelist.WhiteListFunction;
 import net.maksim6opka.STVcore.placeholders.StvExpansion;
 import net.maksim6opka.STVcore.placeholders.providers.UserDiscordUsernamePlaceholder;
@@ -37,7 +36,6 @@ public final class Main extends JavaPlugin {
         List<PluginFunction> functions = List.of(
                 new CoreFunction(this),
                 new AnvilRepairFunction(this),
-                new SuffixFunction(this),
                 new WhiteListFunction(this),
                 new MsgFunction(this),
                 new CommandLog(this),

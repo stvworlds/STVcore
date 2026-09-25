@@ -32,11 +32,11 @@ public class PlayerInfo {
                 .append(Component.text("⌚ ⏸ " + PlaceholderAPI.setPlaceholders(player, "%statistic_hours_played%") + "г.")
                         .color(TextColor.fromHexString("#AAAAAA")))
                 .append(Component.newline())
-                .append(Component.text("ds ⏸ @" + PlaceholderAPI.setPlaceholders(player, "%stv_user_discord_username%"))
+                .append(Component.text("✉ ⏸ @" + PlaceholderAPI.setPlaceholders(player, "%stv_user_discord_username%"))
                         .color(TextColor.fromHexString("#AAAAAA")));
 
         return Component.text(name).color(color)
-                .clickEvent(ClickEvent.suggestCommand(name))
+                .clickEvent(ClickEvent.suggestCommand("/msg" + name))
                 .hoverEvent(HoverEvent.showText(text));
     }
 

@@ -22,7 +22,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
-
+@Deprecated(since = "25.09.2026")
 public class SuffixFunction implements PluginFunction {
 
     private final JavaPlugin plugin;

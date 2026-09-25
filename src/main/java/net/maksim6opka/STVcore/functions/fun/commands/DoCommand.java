@@ -12,22 +12,25 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.fun.FunCommand;
+import net.maksim6opka.STVcore.utils.RateLimiter;
 import net.maksim6opka.STVcore.utils.formatting.message.Messages;
 import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
+
 public class DoCommand implements FunCommand {
 
     MiniMessage mm = MiniMessage.miniMessage();
-    String usageMSG = "<gray>/</gray><i>do</i> <gray>[</gray><yellow><</yellow><aqua>message</aqua><yellow>></yellow><gray>]</gray>";
+    String usageMSG = "<gray>/</gray><i>do</i> <gray>[</gray><yellow><</yellow><aqua>повідомлення</aqua><yellow>></yellow><gray>]</gray>";
     Component usageText = Component.text("Використання: ").append(mm.deserialize(usageMSG));
 
     @Override
     public LiteralCommandNode<CommandSourceStack> node() {
         return Commands.literal("do")
                 .executes(this::mainExecute)
-                .then(Commands.argument("message", StringArgumentType.greedyString())
+                .then(Commands.argument("повідомлення", StringArgumentType.greedyString())
                         .executes(this::argumentExecute))
                 .build();
     }
@@ -41,7 +44,12 @@ public class DoCommand implements FunCommand {
         CommandSender sender = ctx.getSource().getSender();
         if (sender instanceof Player player) {
 
-            String message = ctx.getArgument("message", String.class);
+            if (!RateLimiter.tryAcquire(player.getUniqueId(), 5, Duration.ofSeconds(1))) {
+                Messages.sendDM(mm.deserialize("<red>Ліміт перевищено. Зачекайте пару секунд..."), ctx.getSource().getSender(), "fun", "warn");
+                return 1;
+            }
+
+            String message = ctx.getArgument("повідомлення", String.class);
 
             Component text = Component.empty()
                     .append(Component.text("⏺ ")

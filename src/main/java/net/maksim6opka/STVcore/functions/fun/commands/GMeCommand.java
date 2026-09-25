@@ -6,22 +6,22 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.maksim6opka.STVcore.functions.fun.FunCommand;
+import net.maksim6opka.STVcore.utils.RateLimiter;
 import net.maksim6opka.STVcore.utils.formatting.message.Messages;
-import net.maksim6opka.STVcore.utils.formatting.playerInfo.PlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
+
 public class GMeCommand implements FunCommand {
 
     MiniMessage mm = MiniMessage.miniMessage();
-    String usageMSG = "<gray>/</gray><i>gme</i> <gray>[</gray><yellow><</yellow><aqua>message</aqua><yellow>></yellow><gray>]</gray>";
+    String usageMSG = "<gray>/</gray><i>gme</i> <gray>[</gray><yellow><</yellow><aqua>повідомлення</aqua><yellow>></yellow><gray>]</gray>";
     Component usageText = Component.text("Використання: ").append(mm.deserialize(usageMSG));
     TextColor color = TextColor.color(NamedTextColor.YELLOW);
 
@@ -30,7 +30,7 @@ public class GMeCommand implements FunCommand {
     public LiteralCommandNode<CommandSourceStack> node() {
         return Commands.literal("gme")
                 .executes(this::mainExecute)
-                .then(Commands.argument("message", StringArgumentType.greedyString())
+                .then(Commands.argument("повідомлення", StringArgumentType.greedyString())
                         .executes(this::argumentExecute))
                 .build();
     }
@@ -44,21 +44,12 @@ public class GMeCommand implements FunCommand {
         CommandSender sender = ctx.getSource().getSender();
         if (sender instanceof Player player) {
 
-            String message = ctx.getArgument("message", String.class);
+            if (!RateLimiter.tryAcquire(player.getUniqueId(), 5, Duration.ofSeconds(10))) {
+                Messages.sendDM(mm.deserialize("<red>Ліміт перевищено. Зачекайте пару секунд..."), ctx.getSource().getSender(), "fun", "warn");
+                return 1;
+            }
 
-            Component text = Component.empty()
-                    .append(Component.text("⏺ ")
-                            .color(color)
-                            .hoverEvent(HoverEvent.showText(usageText))
-                    )
-                    .append(Component.text(message)
-                            .hoverEvent(HoverEvent.showText(PlayerInfo.copyMsg(color)))
-                            .clickEvent(ClickEvent.copyToClipboard(message))
-
-                    )
-                    .append(Component.text(" ("))
-                    .append(PlayerInfo.playerInfo(player, color))
-                    .append(Component.text(")"));
+            Component text = MeCommand.FormattingMeCommand(ctx, player, color, usageText);
 
 
             Bukkit.broadcast(text);
